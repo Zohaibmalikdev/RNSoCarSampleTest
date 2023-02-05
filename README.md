@@ -12,7 +12,8 @@
     - firebase -> configured with [setting, updating, listing] data.
 
 
-    [AppScreens] -> Activities
+    [Navigations] -> Activities
+
       - BottomTabScreens
         - Home
         - Cars
