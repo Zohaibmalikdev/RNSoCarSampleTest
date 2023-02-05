@@ -1,0 +1,231 @@
+
+
+import { Text, StyleSheet, View, Button, TextInput, Image } from 'react-native'
+import React, { Component } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import 'react-native-gesture-handler';
+
+
+//================== Stack Navigator
+function HomeScreen({route, navigation}){
+  const [count, setCount] = React.useState(0);
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button title='Update Count' color={'#fff'} onPress={() => setCount((c) => c+1)} />
+      )
+    })
+  }, [navigation])
+  
+  React.useEffect(() => {
+    if(route.params?.post){
+      //send the post to APi from here. 
+      console.debug('recieved: ', route.params?.post);
+    }
+  }, [route.params?.post]) 
+
+
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>
+        Home Screen
+      </Text>
+      <Button 
+        title='Update Title'
+        onPress={() => {navigation.setOptions({title: "My Beautiful Home"})}}
+      />
+      <Button title='Go To Details' onPress={() => {navigation.navigate('Details', {
+          itemId: 786,
+          otherParam: 'anything i want to be here'
+        })}} />
+
+      <Button title='Create A Post' onPress={() => {navigation.navigate('CreatePost')}} />
+     {route.params?.post && <Text> Post: {route.params?.post}</Text>}
+
+     {count !== 0 && <Text>Count: {count}</Text>}
+    </View>
+  )
+}
+
+function DetailsScreen({route, navigation}){
+  // console.log({route, navigation});
+  const {itemId, otherParam} = route.params;
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>
+        Details  Screen
+      </Text>
+      <Text>itemId: {JSON.stringify(itemId)}</Text>
+      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+      <Button
+        title="Go to Details... again"
+        onPress={() => navigation.push('Details', {
+          itemId: Math.floor(Math.random() * 100)
+        })}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button title='popToTop' onPress={() => navigation.popToTop()}/>
+    </View>
+  )
+}
+
+
+function CreatePostScreen({route, navigation}) {
+  const [postText, setPostText] = React.useState('');
+  return(
+    <>
+      <TextInput 
+        multiline
+        placeholder='Whats on your Mind?'
+        style={{height:200, padding: 10, backgroundColor: 'white'}}
+        value={postText}
+        onChangeText={setPostText}
+      />
+
+      <Button
+        title='Done'
+        onPress={() => {
+          // pass the params back to previous screen
+          navigation.navigate({
+            name: 'Home',
+            params: {post: postText},
+            merge: true
+          })
+        }}
+      />
+    </>
+  )
+}
+
+function LogoTitle() {
+  return (
+    <Image
+      style={{ width: 35, height: 35 }}
+      source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+      alt="test"
+    />
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+
+//================== Stack Navigator
+
+
+// ================ Tab Navigator
+
+const Tab = createBottomTabNavigator();
+
+function HomeScreenTab(params) {
+  return(
+    <Tab.Navigator>
+      <Tab.Screen name='Home' component={HomeScreen} />
+      <Tab.Screen name='Root' component={HomeDrawerContainer} options={{headerShown: false}} />
+      <Tab.Screen name='Details' component={DetailsScreenTab} />
+      <Tab.Screen name='CreatePost' component={CreatePostScreen} />
+    </Tab.Navigator>
+  )
+}
+
+function DetailsScreenTab({route, navigation}){
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>
+        Details  Screen
+      </Text>
+      <Button
+        title="Go to Details... again"
+        onPress={() => navigation.push('Details', {
+          itemId: Math.floor(Math.random() * 100)
+        })}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button title='popToTop' onPress={() => navigation.popToTop()}/>
+    </View>
+  )
+}
+
+// ================ Tab Navigator
+
+// ================ Drawer Navigator
+
+const Drawer = createDrawerNavigator();
+
+function HomeDrawerContainer(params) {
+  return(
+    <Drawer.Navigator initialRouteName='HomeDrawer'>
+      <Drawer.Screen name='HomeDrawer' component={HomeScreenDrawer} />
+      <Drawer.Screen name='Notifications' component={NotificationScreenDrawer} />
+    </Drawer.Navigator>
+  )
+}
+
+function HomeScreenDrawer({route, navigation}) {
+  return(
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        onPress={() => navigation.navigate('Notifications')}
+        title="Go to notifications"
+      />
+    </View>
+  )
+}
+
+function NotificationScreenDrawer({route, navigation}) {
+  return(
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button onPress={() => navigation.goBack()} title="Go back home" />
+    </View>
+
+  )
+}
+
+// ================ Drawer Navigator
+
+export default class AppTest extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <NavigationContainer>
+          <Stack.Navigator 
+            initialRouteName='Home' 
+            screenOptions={{
+                headerTitle: (props) => <LogoTitle {...props}/>,
+                headerStyle: {backgroundColor: '#f4511e'},
+                headerTintColor: "#fff",
+                headerTitleStyle: {
+                  fontWeight: 'bold'
+                }
+              }}>
+            <Stack.Screen 
+              name='Home' 
+              component={HomeScreenTab} 
+              options={{ 
+                title: "My Home", 
+                headerShown: false,
+              }} 
+            />
+            <Stack.Screen 
+              name='Details' 
+              component={DetailsScreen} 
+              options={({ route }) => ({ title: route.params?.name })} 
+            />
+            <Stack.Screen 
+              name='CreatePost' 
+              component={CreatePostScreen} 
+              options={({ route }) => ({ title: route.params?.name })} 
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({})
