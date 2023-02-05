@@ -64,9 +64,14 @@
 
 
 
-## View Reserved Car Details [BMW i7 2015]
+## View Active Reservation Car & Details [BMW i7 2015]
 
 <img src="https://user-images.githubusercontent.com/37066492/216810105-d174ade7-b2c1-4098-bbea-a2f519e78bb3.png" width="150" height="300"> && <img src="https://user-images.githubusercontent.com/37066492/216810116-8ed78880-f0b1-4cec-bf41-c96d9f2f8ccf.png" width="150" height="300">
+
+
+## View Completed Reservation Car & Details
+
+<img src="https://user-images.githubusercontent.com/37066492/216810307-7c6b9883-5721-4f72-95e1-23e473ad434c.png" width="150" height="300"> && <img src="https://user-images.githubusercontent.com/37066492/216810196-38088714-1d4c-450b-8723-68a5589d0f92.png" width="150" height="300"> && <img src="https://user-images.githubusercontent.com/37066492/216810208-cb390fa2-ee84-4881-ba32-e6bf62917dc5.png" width="150" height="300">
 
 
 
